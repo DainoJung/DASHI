@@ -114,11 +114,7 @@ export function PrimaryButton({
   if (href) {
     // 링크인 경우: Next.js Link 내부에 <a> 태그를 사용하여 버튼 스타일을 적용합니다.
     return (
-<<<<<<< HEAD
       <Link href={href} legacyBehavior>
-=======
-      <Link href={href}>
->>>>>>> 84b915ae98434f88930b34cdb187b60b596cf2e3
         <a className={classes} {...(props as AnchorHTMLAttributes<HTMLAnchorElement>)}>
           {children}
         </a>
@@ -132,9 +128,4 @@ export function PrimaryButton({
       {children}
     </button>
   );
-<<<<<<< HEAD
 }
-=======
-}
-
->>>>>>> 84b915ae98434f88930b34cdb187b60b596cf2e3
