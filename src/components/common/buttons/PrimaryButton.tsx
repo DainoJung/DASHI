@@ -3,6 +3,7 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
+import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from 'react';
 
 const buttonVariants = cva(
   'inline-flex items-center justify-center rounded-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3449FF] focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none',
@@ -26,29 +27,50 @@ const buttonVariants = cva(
   }
 );
 
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
-  href?: string;
-}
+// 버튼이 링크인 경우와 일반 버튼인 경우의 타입을 분리합니다.
+type LinkButtonProps = {
+  href: string;
+  children: ReactNode;
+  className?: string;
+  variant?: 'default' | 'outline' | 'ghost';
+  size?: 'default' | 'sm' | 'lg';
+} & AnchorHTMLAttributes<HTMLAnchorElement>;
+
+type RegularButtonProps = {
+  href?: undefined;
+  children: ReactNode;
+  className?: string;
+  variant?: 'default' | 'outline' | 'ghost';
+  size?: 'default' | 'sm' | 'lg';
+} & ButtonHTMLAttributes<HTMLButtonElement>;
+
+type ButtonProps = LinkButtonProps | RegularButtonProps;
 
 export function PrimaryButton({
   className,
   variant,
   size,
-  href,
   children,
+  href,
   ...props
 }: ButtonProps) {
-  const Comp = href ? Link : 'button';
-  
+  const classes = cn(buttonVariants({ variant, size, className }));
+
+  if (href) {
+    // 링크인 경우: Next.js Link 내부에 <a> 태그를 사용하여 버튼 스타일을 적용합니다.
+    return (
+      <Link href={href} legacyBehavior>
+        <a className={classes} {...(props as AnchorHTMLAttributes<HTMLAnchorElement>)}>
+          {children}
+        </a>
+      </Link>
+    );
+  }
+
+  // 일반 버튼인 경우: <button> 태그를 사용합니다.
   return (
-    <Comp
-      className={cn(buttonVariants({ variant, size, className }))}
-      href={href}
-      {...props}
-    >
+    <button className={classes} {...(props as ButtonHTMLAttributes<HTMLButtonElement>)}>
       {children}
-    </Comp>
+    </button>
   );
-} 
+}
