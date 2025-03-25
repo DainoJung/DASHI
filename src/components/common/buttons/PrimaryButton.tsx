@@ -82,6 +82,7 @@ const buttonVariants = cva(
   }
 );
 
+// 버튼이 링크인 경우와 일반 버튼인 경우의 타입을 분리합니다.
 type LinkButtonProps = {
   href: string;
   children: ReactNode;
@@ -111,6 +112,7 @@ export function PrimaryButton({
   const classes = cn(buttonVariants({ variant, size, className }));
 
   if (href) {
+    // 링크인 경우: Next.js Link 내부에 <a> 태그를 사용하여 버튼 스타일을 적용합니다.
     return (
       <Link href={href}>
         <a className={classes} {...(props as AnchorHTMLAttributes<HTMLAnchorElement>)}>
@@ -120,9 +122,11 @@ export function PrimaryButton({
     );
   }
 
+  // 일반 버튼인 경우: <button> 태그를 사용합니다.
   return (
     <button className={classes} {...(props as ButtonHTMLAttributes<HTMLButtonElement>)}>
       {children}
     </button>
   );
 }
+
