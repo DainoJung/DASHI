@@ -45,7 +45,7 @@ export function PrimaryButton({
   return (
     <Comp
       className={cn(buttonVariants({ variant, size, className }))}
-      href={href}
+      href={href ?? "#"}
       {...props}
     >
       {children}
