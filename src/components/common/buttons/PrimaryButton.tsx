@@ -82,22 +82,30 @@ const buttonVariants = cva(
   }
 );
 
-type ButtonProps = {
+type LinkButtonProps = {
+  href: string;
   children: ReactNode;
   className?: string;
   variant?: 'default' | 'outline' | 'ghost';
   size?: 'default' | 'sm' | 'lg';
-} & (
-  | ({ href: string } & AnchorHTMLAttributes<HTMLAnchorElement>)
-  | (ButtonHTMLAttributes<HTMLButtonElement> & { href?: undefined })
-);
+} & AnchorHTMLAttributes<HTMLAnchorElement>;
+
+type RegularButtonProps = {
+  href?: undefined;
+  children: ReactNode;
+  className?: string;
+  variant?: 'default' | 'outline' | 'ghost';
+  size?: 'default' | 'sm' | 'lg';
+} & ButtonHTMLAttributes<HTMLButtonElement>;
+
+type ButtonProps = LinkButtonProps | RegularButtonProps;
 
 export function PrimaryButton({
   className,
   variant,
   size,
-  href,
   children,
+  href,
   ...props
 }: ButtonProps) {
   const classes = cn(buttonVariants({ variant, size, className }));
@@ -105,7 +113,7 @@ export function PrimaryButton({
   if (href) {
     return (
       <Link href={href}>
-        <a className={classes} {...props}>
+        <a className={classes} {...(props as AnchorHTMLAttributes<HTMLAnchorElement>)}>
           {children}
         </a>
       </Link>
@@ -113,7 +121,7 @@ export function PrimaryButton({
   }
 
   return (
-    <button className={classes} {...props}>
+    <button className={classes} {...(props as ButtonHTMLAttributes<HTMLButtonElement>)}>
       {children}
     </button>
   );
